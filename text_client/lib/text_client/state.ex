@@ -1,7 +1,8 @@
 defmodule TextClient.State do
   defstruct(
     game_service: nil,
-    tally: nil,
-    guess: ""
+    tally:        nil,
+    guess:        ""
   )
+
 end

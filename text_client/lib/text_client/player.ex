@@ -1,27 +1,25 @@
 defmodule TextClient.Player do
 
-  alias TextClient.{State, Summary, Prompter, Mover}
+  alias TextClient.{Mover, Prompt, State, Status}
 
-  #won, lost, good guess, bad guess, already used, initializing
-
-  def play(%State{ tally: %{ game_state: :won, letter: letters}}) do
-    finish_with_message("You won", letters)
+  def play(%State{tally: %{ game_state: :won, letters: letters }}) do
+    end_with_message("You WON!", letters)
   end
 
-  def play(%State{ tally: %{ game_state: :lost, letters: letters}}) do
-    finish_with_message("You lost", letters)
+  def play(%State{tally: %{ game_state: :lost, letters: letters }}) do
+    end_with_message("Sorry, you lost...", letters)
   end
 
-  def play(game = %State{tally: %{game_state: :good_guess}}) do
-    continue_with_message(game, "Good guess")
+  def play(game = %State{ tally: %{ game_state: :good_guess }}) do
+    continue_with_message(game, "Good guess!")
   end
 
-  def play(game = %State{tally: %{game_state: :bad_guess}}) do
-    continue_with_message(game, "Bad guess")
+  def play(game = %State{ tally: %{ game_state: :bad_guess }}) do
+    continue_with_message(game, "That's not in the word...")
   end
 
-  def play(game = %State{tally: %{game_state: :already_used}}) do
-    continue_with_message(game, "Already used")
+  def play(game = %State{tally: %{ game_state: :already_used }}) do
+    continue_with_message(game, "You already used that letter")
   end
 
   def play(game = %State{}) do
@@ -29,19 +27,22 @@ defmodule TextClient.Player do
   end
 
   defp continue_with_message(game, message) do
-    IO.puts(["\n", message])
+    IO.puts message
     continue(game)
   end
 
   defp continue(game = %State{}) do
     game
-      |> Summary.display()
-      |> Prompter.accept_move()
-      |> Mover.make_move()
-      |> play()
+    |> Status.display()
+    |> Prompt.accept_move()
+    |> Mover.make_move()
+    |> play()
   end
 
-  defp finish_with_message(message, letters) do
-    IO.puts(["\n", message, "The world was #{Enum.join(letters)}"])
+
+  defp end_with_message(msg, letters) do
+    IO.puts(["\n", msg, "The word was #{Enum.join(letters)}"])
   end
+
+
 end

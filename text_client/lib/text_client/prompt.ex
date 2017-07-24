@@ -1,9 +1,9 @@
-defmodule TextClient.Prompter do
+defmodule TextClient.Prompt do
   alias TextClient.State
 
   def accept_move(game = %State{}) do
     IO.gets("Your guess: ")
-      |> check_input(game)
+    |> check_input(game)
   end
 
   defp check_input({:error, reason}, _) do
@@ -11,8 +11,8 @@ defmodule TextClient.Prompter do
     exit(:normal)
   end
 
-  defp check_input(:eof, _) do
-    IO.puts("Looks like you give up")
+  defp check_input(_eof = nil, _) do
+    IO.puts("Looks like you gave up...")
     exit(:normal)
   end
 
